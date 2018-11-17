@@ -85,71 +85,71 @@ spread(scores_tidy,
 d <- mpg
 d[,1]
 
-mpg %>% 
-  select(manufacturer, model, displ, year, cyl) %>% 
-  filter(manufacturer == "audi") %>% 
+mpg %>%
+  select(manufacturer, model, displ, year, cyl) %>%
+  filter(manufacturer == "audi") %>%
   mutate(century = ceiling(year/100))
 
-mpg %>% 
+mpg %>%
   arrange(cty)
 
-mpg %>% 
+mpg %>%
   arrange(-cty)
 
-mpg %>% 
+mpg %>%
   arrange(desc(cty, hwy))
 
-mpg %>% 
+mpg %>%
   arrange(desc(manufacturer))
 
-mpg %>% 
+mpg %>%
   select(model, trans)
 
-mpg %>% 
+mpg %>%
   select(manufacturer:year)
 
-mpg %>% 
+mpg %>%
   select(-manufacturer, -year)
 
-mpg %>% 
+mpg %>%
   select(MODEL = model)
 
-mpg %>% 
+mpg %>%
   rename(MODEL = model, TRANS = trans)
 
-mpg %>% 
+mpg %>%
   select(matches(".*c.*"))
 
-mpg %>% 
+mpg %>%
   mutate(cty_6 = if_else(cyl >= 6,"6_or_more", "less_than_6"))
 
-mpg %>% 
+mpg %>%
   transmute(cty_6 = if_else(cyl >= 6,"6_or_more", "less_than_6"))
 
-mpg %>% 
+mpg %>%
   summarise(displ_max = max(displ))
 
-mpg %>% 
-  group_by(class) %>% 
+mpg %>%
+  group_by(class) %>%
   summarize(mean_cty = mean(cty))
 
-mpg %>% 
-  group_by(year,class) %>% 
+mpg %>%
+  group_by(year,class) %>%
   summarize(max_displ=max(displ))
 
-mpg_grouped <- mpg %>% 
+mpg_grouped <- mpg %>%
   group_by(manufacturer, year)
 
-mpg %>% 
+mpg %>%
   transmute(displ_rank = rank(displ, ties.method = "max"))
 
-mpg_grouped %>% 
+mpg_grouped %>%
   transmute(displ_rank=rank(displ, ties.method = "max"))
 
-mpg_grouped %>% 
+mpg_grouped %>%
   filter(n() > 20)
 
-mpg_grouped %>% 
+mpg_grouped %>%
   summarise(displ_max = max(displ))
 
 ungroup(mpg_grouped)
@@ -167,16 +167,16 @@ uriage <- tibble(
   sales = c(100,500,200,500,400,500,800,500)
 )
 
-uriage %>% 
-  group_by(store) %>% 
+uriage %>%
+  group_by(store) %>%
   mutate(sales_diff=sales-lag(sales))
 
-uriage %>% 
-  group_by(store) %>% 
+uriage %>%
+  group_by(store) %>%
   mutate(sales_diff=sales-lead(sales))
 
-uriage %>% 
-  group_by(store) %>% 
+uriage %>%
+  group_by(store) %>%
   mutate(sales_mean = mean(sales),
          sales_err = sales-sales_mean)
 
@@ -192,38 +192,38 @@ d <- tibble(
   test4 = runif(10, max = 100)
 )
 
-d %>% 
+d %>%
   mutate(test1 = round(test1),
          test2 = round(test2),
          test3 = round(test3),
          test4 = round(test4)
   )
 
-d_tidy <- d %>% 
+d_tidy <- d %>%
   gather(key = "test", value = "value", test1:test4)
 d_tidy
 
-d_tidy %>% 
+d_tidy %>%
   mutate(value = round(value))
 
-d_tidy %>% 
+d_tidy %>%
   group_by(test) %>%
   summarise(value_avg = mean(value))
 
-d_tidy %>% 
+d_tidy %>%
   mutate(value = round(value)) %>%
   spread(key = test, value = value)
 
-d %>% 
+d %>%
   mutate_all(round)
 
 mpg %>%
   mutate_if(is.numeric, round)
 
-d %>% 
+d %>%
   mutate_at(c("test1", "test2", "test3", "test4"), round)
 
-d %>% 
+d %>%
   mutate_at(vars(-id), round)
 
 uriage
@@ -232,7 +232,7 @@ tenko <- tibble(
   rained = c(F,F,T,F)
 )
 
-uriage %>% 
+uriage %>%
   inner_join(tenko, by = "day")
 
 tenko2 <- tibble(
@@ -240,7 +240,7 @@ tenko2 <- tibble(
   rained = c(F,F,T,F)
 )
 
-uriage %>% 
+uriage %>%
   inner_join(tenko2, by = c("day" = "DAY"))
 
 tenko3 <- tibble(
@@ -249,11 +249,11 @@ tenko3 <- tibble(
   rained = c(F,F,T,F,T)
 )
 
-uriage %>% 
+uriage %>%
   inner_join(tenko3,by=c("day"="DAY", "store"))
 
-res <- uriage %>% 
+res <- uriage %>%
   left_join(tenko3, by=c("day"="DAY", "store"))
 
-res %>% 
+res %>%
   mutate(rained=replace_na(rained, FALSE))
